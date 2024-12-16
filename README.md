@@ -56,7 +56,7 @@
 | Average     | 4.306s           | 3.004s          | 2.169s          | 2.110s              | 2.091s    |
 
 数据大小为 $10^7$，分批次操作，每个批次 $10^5$
-依次执行三个宽依赖操作 (reduceByKey、groupByKey、join)情况下：
+依次执行三个宽依赖操作 (`reduceByKey`、`groupByKey`、`join`)情况下：
 | MEMORY_ONLY      | MEMORY_AND_DISK | MEMORY_ONLY_SER | MEMORY_AND_DISK_SER | DISK_ONLY |
 | ---------------- | --------------- | --------------- | ------------------- | --------- |
 | 138.414s         | 140.131s        | 143.429s        | 145.361s            | 152.599s  |
@@ -314,7 +314,7 @@ Spark 的内存管理和序列化/反序列化操作有时会带来额外的开�
 
 查看**job2** 和**job1** 的**DAG**图可以看出这两个操作的类似，验证了`stage`间的数据传输为宽依赖操作，通过触发`shuffle`从而进行数据传输。
 
-不同`stage`得详细信息：
+不同`stage`的详细信息：
 
 ![GitHub图像](/assets/image-20241216124410887.png) 
 
