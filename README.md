@@ -43,8 +43,9 @@
 
 **`DISK_ONLY`**：数据仅缓存到磁盘，适合内存小或减少内存占用的场景，但访问较慢。
 
-不同存储的执行时间：
-
+不同存储的执行时间：<br><br>
+数据大小为 $10^6$ 
+只执行一个宽依赖操作 (reduceByKey)情况下：
 | Batch/level | MEMORY_ONLY      | MEMORY_AND_DISK | MEMORY_ONLY_SER | MEMORY_AND_DISK_SER | DISK_ONLY |
 | ----------- | ---------------- | --------------- | --------------- | ------------------- | --------- |
 | $1^{st}$    | 4.440s           | 3.210s          | 2.377s          | 2.166s              | 2.068s    |
@@ -54,12 +55,17 @@
 | $5^{th}$    | 4.174s           | 3.158s          | 2.089s          | 2.091s              | 2.007s    |
 | Average     | 4.306s           | 3.004s          | 2.169s          | 2.110s              | 2.091s    |
 
+数据大小为 $10^7$，分批次操作，每个批次 $10^5$
+依次执行三个宽依赖操作 (reduceByKey、groupByKey、join)情况下：
+| MEMORY_ONLY      | MEMORY_AND_DISK | MEMORY_ONLY_SER | MEMORY_AND_DISK_SER | DISK_ONLY |
+| ---------------- | --------------- | --------------- | ------------------- | --------- |
+| 138.414s         | 140.131s        | 143.429s        | 145.361s            | 152.599s  |
 
 
 #### 实验数据：
 
 ![GitHub图像](/assets/image-20241216124811069.png) 
-
+![GitHub图像](/assets/20241216234953.png)
 
 
 #### 理论分析:
@@ -84,7 +90,7 @@
 
 对于小数据量来说，`MEMORY_ONLY` 和 `MEMORY_ONLY_SER` 通常是最快的，数据直接放在内存里，读取速度很快。不过，当数据量变大时，`MEMORY_AND_DISK` 或 `DISK_ONLY` 更稳定一些，能够防止因为内存不够导致任务失败，虽然性能会慢一些。
 
-Spark 的内存管理和序列化/反序列化操作有时会带来额外的开销，反而拖慢小数据量的性能。特别是 `DISK_ONLY`，在小数据量的情况下反而表现不错，因为磁盘 I/O 的开销并不大，而且避免了复杂的内存管理。
+Spark 的内存管理和序列化/反序列化操作有时会带来额外的开销，反而拖慢小数据量的性能。特别是 `DISK_ONLY`，在小数据量的情况下反而表现不错，因为磁盘 I/O 的开销并不大，而且避免了复杂的内存管理。 <br><br>
 
 
 
@@ -234,7 +240,7 @@ Spark 的内存管理和序列化/反序列化操作有时会带来额外的开�
 
 **分区数太大**：增加调度开销和 `Shuffle` 数据量，反而降低性能。
 
-**最佳分区数**：取决于集群的资源（如 **CPU** 核心数、内存）和数据规模，需要根据实际情况进行调优。 //
+**最佳分区数**：取决于集群的资源（如 **CPU** 核心数、内存）和数据规模，需要根据实际情况进行调优。  <br><br>
 
 
 
@@ -321,24 +327,24 @@ Spark 的内存管理和序列化/反序列化操作有时会带来额外的开�
 
 ## 参考资料
 
-**徐辰, 分布式计算系统, 高等教育出版社, https://dasebigdata.github.io/, 2022.**
+1. **徐辰, 分布式计算系统, 高等教育出版社, https://dasebigdata.github.io/, 2022.**
 
-**如何在Linux服务器上安装Anaconda [https://blog.csdn.net/wyf2017/article/details/118676765]**
+2. **如何在Linux服务器上安装Anaconda [https://blog.csdn.net/wyf2017/article/details/118676765]**
 
-**spark调优篇-spark on yarn web UI [https://www.cnblogs.com/yanshw/p/12038633.html]**
+3. **spark调优篇-spark on yarn web UI [https://www.cnblogs.com/yanshw/p/12038633.html]**
 
-**PySpark基础入门（1）：基础概念＋环境搭建 [https://juejin.cn/post/7228162548901904440]**
+4. **PySpark基础入门（1）：基础概念＋环境搭建 [https://juejin.cn/post/7228162548901904440]**
 
-**PySpark部署安装 [https://cloud.tencent.com/developer/article/2334461]**
+5. **PySpark部署安装 [https://cloud.tencent.com/developer/article/2334461]**
 
-**Linux上配置Jupyter Notebook远程访问 [https://fuhailin.github.io/remote-jupyter-notebook/]**
+6. **Linux上配置Jupyter Notebook远程访问 [https://fuhailin.github.io/remote-jupyter-notebook/]**
 
-**Spark大数据分析与实战笔记 [https://blog.csdn.net/u014727709/article/details/136032936]**
+7. **Spark大数据分析与实战笔记 [https://blog.csdn.net/u014727709/article/details/136032936]**
 
 
 
 ## 分工
-- **程盛霖**（ $51275903039$ ）：掌管**GPT**之神。
+- **程盛霖**（ $51275903039$ ）：分配组员工作，安慰组员情绪，写**README.md**，写**PPT**，小组**GPT**平替。
 - **贾茂宁**（ $51275903099$ ）：实验设计，编写实验代码，画图分析。
 - **彭林航**（ $51275903073$ ）：搭建**spark**集群环境，**spark web UI**改进、**spark**后台管理。
 - **金浩阳**（ $51275903043$ ）：搭建**pyspark**、**notebook**运行环境，编写实验代码，代码运行测试改进。
