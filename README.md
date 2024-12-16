@@ -58,7 +58,7 @@
 
 #### 实验数据：
 
-![image-20241216124811069](D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216124811069.png) 
+![GitHub图像](/assets/image-20241216124811069.png) 
 
 
 
@@ -169,9 +169,9 @@ Spark 的内存管理和序列化/反序列化操作有时会带来额外的开�
 
 **由实验结果绘制如下图表：**
 
-![image-20241216155738191](D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216155738191.png) 
+![GitHub图像](/assets/image-20241216155738191.png) 
 
-![image-20241216180846011](D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216180846011.png) 
+![GitHub图像](/assets/image-20241216180846011.png) 
 
 #### 图像分析：
 
@@ -272,51 +272,51 @@ Spark 的内存管理和序列化/反序列化操作有时会带来额外的开�
 
 - **窄依赖操作**
 
-<img src="D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216084017977.png" alt="image-20241216084017977" style="zoom:80%;" /> 
+![GitHub图像](/assets/image-20241216084017977.png)
 
 在执行时先使用窄依赖操作，由于窄依赖操作时数据没有离开分区，所有的数据操作都在一个`stage`完成。
 
 
 
-![image-20241216084126000](D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216084126000.png) 
+![GitHub图像](/assets/image-20241216084126000.png) 
 
-![image-20241216084223995](D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216084223995.png) 
+![GitHub图像](/assets/image-20241216084223995.png) 
 
 在`stage0` 我们可以清晰的看到所执行的窄依赖操作确实没有触发`Shuffle`，数据并没有在`stage`之间进行传输。阶段一生成的`DAG`图如下，生成的`DAG`图对应着我们之前执行的转换操作**算子**。
 
-<img src="D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216085856140.png" alt="image-20241216085856140" style="zoom:80%;" />  
+![GitHub图像](/assets/image-20241216085856140.png) 
 
 - **宽依赖操作**
 
-<img src="D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216123256064.png" alt="image-20241216123256064" style="zoom:80%;" /> 
+![GitHub图像](/assets/image-20241216123256064.png)
 
 对于宽依赖操作，我们使用`groupBykey`和`reduceByKey`查看是否出发`shuffle`和新的`stage`
 
 
 
-![image-20241216123445345](D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216123445345.png)  
+![GitHub图像](/assets/image-20241216123445345.png)  
 
 从**spark ui**可以看出**job id2** 和**id1** 分别对应`gourdbykey` 和`reducebyKey` 操作，每个宽依赖操作都会开启一个新的`stage`，且可以在`stage`界面看到`shffle` 读写的操作以及数据传送的大小。
 
 
 
-![image-20241216123841678](D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216123841678.png) 
+![GitHub图像](/assets/image-20241216123841678.png) 
 
-![image-20241216123935555](D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216123935555.png) 
+![GitHub图像](/assets/image-20241216123935555.png) 
 
-![image-20241216124003560](D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216124003560.png) 
+![GitHub图像](/assets/image-20241216124003560.png) 
 
 查看**job2** 和**job1** 的**DAG**图可以看出这两个操作的类似，验证了`stage`间的数据传输为宽依赖操作，通过触发`shuffle`从而进行数据传输。
 
 不同`stage`得详细信息：
 
-![image-20241216124410887](D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216124410887.png) 
+![GitHub图像](/assets/image-20241216124410887.png) 
 
-<img src="D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216124429518.png" alt="image-20241216124429518"  /> 
+![GitHub图像](/assets/image-20241216124429518.png)
 
-![image-20241216124502462](D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216124502462.png) 
+![GitHub图像](/assets/image-20241216124502462.png) 
 
-![image-20241216124551127](D:\WorkPlace\remote\spark\github_repository\Verification_And_Exploration_Of_Spark_Working_Principle\assets\image-20241216124551127.png) 
+![GitHub图像](/assets/image-20241216124551127.png) 
 
 
 ## 参考资料
